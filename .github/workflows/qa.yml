@@ -15,22 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      # Шаг 1: Запускаем сервер в фоне
-      - name: Start test server
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+        
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Start server and Run Cypress
         run: |
-          npm install
           npm run start:test &
-          
-      # Шаг 2: Даем серверу время на запуск (ожидание health-check)
-      - name: Wait for server
-        run: |
-          npx wait-on http://127.0.0.1:3000/api/health --timeout 30000
-          
-      # Шаг 3: Запускаем тесты Cypress
-      - name: Cypress run
-        uses: cypress-io/github-action@v6
-        with:
-          install: false
-          wait-on: 'http://127.0.0.1:3000'
-          wait-on-timeout: 60
+          npx wait-on http://127.0.0.1:3000/api/health --timeout 60000
+          npx cypress run
