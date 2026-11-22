@@ -24,5 +24,5 @@ jobs:
       - name: Start server and Run Cypress
         run: |
           npm run start:test &
-          npx wait-on http://127.0.0.1:3000/api/health --timeout 60000
+          npx --yes wait-on http-get://127.0.0.1:3000/api/health --timeout 60000
           npx cypress run
